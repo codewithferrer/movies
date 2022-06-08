@@ -4,6 +4,7 @@
     package="es.trespies.movies">
 
     <application
+        android:name=".MovieApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
