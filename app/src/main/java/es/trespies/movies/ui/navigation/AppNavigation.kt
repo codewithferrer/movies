@@ -24,7 +24,7 @@ fun AppNavigation() {
         arguments = listOf(navArgument(name = "movieId") {
             type = NavType.StringType
         })) {
-          MovieDetailView(navController = navController, movieId = it.arguments?.getString("movieId"))  
+          MovieDetailView(navController = navController, movieId = it.arguments?.getString("movieId"))
         }
     }
 }
