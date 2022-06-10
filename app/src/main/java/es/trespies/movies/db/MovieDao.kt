@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(assets: List<Movie>)
+    abstract fun insert(movies: List<Movie>)
 
     @Query("SELECT * FROM Movie")
     abstract fun loadMovies(): Flow<List<Movie>>
