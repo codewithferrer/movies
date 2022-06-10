@@ -1,12 +1,15 @@
 package es.trespies.movies.di
 
 import android.content.Context
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.trespies.movies.api.MovieService
+import es.trespies.movies.db.MovieDao
+import es.trespies.movies.db.MovieDb
 import es.trespies.movies.services.ApiKeyInterceptor
 import es.trespies.movies.services.CoroutineAppExecutors
 import es.trespies.movies.util.ApiResponseCallAdapterFactory
@@ -44,6 +47,20 @@ object AppModule {
             .client(httpClient.build())
             .build()
             .create(MovieService::class.java)
+    }
+
+    @Singleton @Provides
+    fun provideDb(@ApplicationContext appContext: Context): MovieDb {
+        return Room
+            .databaseBuilder(appContext, MovieDb::class.java, "movie.db")
+            .enableMultiInstanceInvalidation()
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Singleton @Provides
+    fun provideMovieDao(movieDb: MovieDb): MovieDao {
+        return movieDb.movieDao()
     }
 
 }
