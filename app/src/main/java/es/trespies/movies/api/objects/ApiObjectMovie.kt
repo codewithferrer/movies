@@ -16,5 +16,19 @@ data class ApiObjectMovie(var id: String?,
                           @SerializedName("vote_average")
                           var voteAverage: Float?,
                           @SerializedName("vote_count")
-                          var voteCount: Long?
+                          var voteCount: Long?,
+
+                          @SerializedName("poster_path")
+                          var posterPath: String?,
+                          @SerializedName("release_date")
+                          var releaseDate: String?,
+                          var popularity: Float?
+/*
+                          @SerializedName("poster_path")
+                          var posterPath: String?,
+                          @SerializedName("release_date")
+                          var releaseDate: String?,
+                          var popularity: Long?
+
+ */
 ): Serializable

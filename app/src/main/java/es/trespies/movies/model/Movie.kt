@@ -11,4 +11,9 @@ data class Movie(var id: String,
                  var originalLang: String,
                  var overview: String,
                  var voteAverage: Float?,
-                 var voteCount: Long?)
+                 var voteCount: Long?,
+                 var posterPath: String?,
+                 var releaseDate: String?,
+                 var popularity: Float?,
+                 var releaseDateTimestamp: Long?
+                 )

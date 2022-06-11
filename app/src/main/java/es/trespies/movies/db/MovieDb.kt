@@ -8,7 +8,7 @@ import es.trespies.movies.model.Movie
     entities = [
         Movie::class
     ],
-    version = 1
+    version = 2
 )
 abstract class MovieDb : RoomDatabase() {
 

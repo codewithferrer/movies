@@ -4,6 +4,8 @@ import es.trespies.movies.api.MovieService
 import es.trespies.movies.db.MovieDao
 import es.trespies.movies.model.Movie
 import es.trespies.movies.services.CoroutineAppExecutors
+import es.trespies.movies.util.DateFormarEnum
+import es.trespies.movies.util.DateUtils
 import es.trespies.movies.util.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -26,7 +28,11 @@ class MoviesRepository @Inject constructor(
                                  originalLang = it.originalLang ?: "",
                                  overview = it.overview ?: "",
                                  voteAverage = it.voteAverage,
-                                 voteCount = it.voteCount
+                                 voteCount = it.voteCount,
+                                 posterPath = it.posterPath,
+                                 releaseDate = it.releaseDate,
+                                 popularity = it.popularity,
+                                 releaseDateTimestamp = DateUtils.stringToLong(it.releaseDate, DateFormarEnum.YYYYMMDD)
                              ) }
                          }?.let {
                              movieDao.insert(movies = it)
