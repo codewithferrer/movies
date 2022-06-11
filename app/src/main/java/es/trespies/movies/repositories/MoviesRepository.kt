@@ -32,7 +32,7 @@ class MoviesRepository @Inject constructor(
                                  voteAverage = it.voteAverage,
                                  voteCount = it.voteCount,
                                  //Create full path for images
-                                 posterPath = it.posterPath?.let { "${configuration.urlImages}it" },
+                                 posterPath = it.posterPath?.let { url -> "${configuration.urlImages}$url" },
                                  releaseDate = it.releaseDate,
                                  popularity = it.popularity,
                                  releaseDateTimestamp = DateUtils.stringToLong(it.releaseDate, DateFormarEnum.YYYYMMDD)
