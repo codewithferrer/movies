@@ -11,6 +11,7 @@ import es.trespies.movies.api.MovieService
 import es.trespies.movies.db.MovieDao
 import es.trespies.movies.db.MovieDb
 import es.trespies.movies.services.ApiKeyInterceptor
+import es.trespies.movies.services.Configuration
 import es.trespies.movies.services.CoroutineAppExecutors
 import es.trespies.movies.util.ApiResponseCallAdapterFactory
 import okhttp3.OkHttpClient
@@ -22,6 +23,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Singleton
+    @Provides
+    fun provideConfiguration(@ApplicationContext appContext: Context): Configuration {
+        return Configuration(context = appContext)
+    }
 
     @Singleton
     @Provides
