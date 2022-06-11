@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,12 +59,13 @@ fun HomeBodyContentView(movies: Resource<List<Movie>>) {
         TitleView(title = "Movies · Status: ${movies.status.name}", modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp))
 
-        val scrollState = rememberLazyListState()
+        val scrollState = rememberLazyGridState()
 
-        LazyColumn(state = scrollState, modifier = Modifier.fillMaxWidth()) {
+        LazyVerticalGrid(state = scrollState,
+            columns = GridCells.Adaptive(minSize = 128.dp)) {
             movies.data?.let {
                 items(it) { item ->
-                    MovieView(movie = item)
+                    MovieCellView(movie = item)
                 }
             }
         }
@@ -88,9 +93,23 @@ fun MovieView(movie: Movie) {
 @Composable
 fun HomeBodyContentViewPreview() {
     MoviesTheme() {
-        val list = listOf<Movie>(
-            //CryptoAsset("BTC", "BTC", "BitCoin"),
-            //CryptoAsset("ETH", "ETH", "Ethereum")
+        val movie = Movie(
+            id = "fkjsh",
+            imdbId = "jsfdlkjf",
+            title = "Fantastic Beasts: The Secrets of Dumbledore",
+            originalTitle = "Fantastic Beasts: The Secrets of Dumbledore",
+            originalLang = "en",
+            overview = "Professor Albus Dumbledore knows the powerful, dark wizard Gellert Grindelwald is moving to seize control of the wizarding world. Unable to stop him alone, he entrusts magizoologist Newt Scamander to lead an intrepid team of wizards and witches. They soon encounter an array of old and new beasts as they clash with Grindelwald's growing legion of followers.",
+            voteAverage = 4.2f,
+            voteCount = 1548,
+            posterPath = "https://image.tmdb.org/t/p/original/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg",
+            releaseDate = "2022-04-06",
+            popularity = 2121.5f,
+            releaseDateTimestamp = 4654654644
+        )
+
+        val list = listOf(
+            movie, movie, movie, movie, movie, movie, movie, movie, movie, movie, movie,
         )
 
         HomeBodyContentView(Resource.success(list))
