@@ -16,4 +16,6 @@ data class Movie(var id: String,
                  var releaseDate: String?,
                  var popularity: Float?,
                  var releaseDateTimestamp: Long?
-                 )
+                 ) {
+    companion object {}
+}

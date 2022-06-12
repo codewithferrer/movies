@@ -5,8 +5,6 @@ import es.trespies.movies.db.MovieDao
 import es.trespies.movies.model.Movie
 import es.trespies.movies.services.Configuration
 import es.trespies.movies.services.CoroutineAppExecutors
-import es.trespies.movies.util.DateFormarEnum
-import es.trespies.movies.util.DateUtils
 import es.trespies.movies.util.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -23,20 +21,7 @@ class MoviesRepository @Inject constructor(
         coroutineAppExecutors = coroutineAppExecutors,
         saveCallResult = { apiObject ->
                          apiObject.results?.mapNotNull {
-                             it.id?.let { id -> Movie(id = id,
-                                 imdbId = it.imdbId,
-                                 title = it.title ?: "",
-                                 originalTitle = it.originalTitle ?: "",
-                                 originalLang = it.originalLang ?: "",
-                                 overview = it.overview ?: "",
-                                 voteAverage = it.voteAverage,
-                                 voteCount = it.voteCount,
-                                 //Create full path for images
-                                 posterPath = it.posterPath?.let { url -> "${configuration.urlImages}$url" },
-                                 releaseDate = it.releaseDate,
-                                 popularity = it.popularity,
-                                 releaseDateTimestamp = DateUtils.stringToLong(it.releaseDate, DateFormarEnum.YYYYMMDD)
-                             ) }
+                             Movie.build(it, configuration)
                          }?.let {
                              movieDao.insert(movies = it)
                          }
@@ -45,5 +30,15 @@ class MoviesRepository @Inject constructor(
         fetch = { movieService.popularMovies() }
     )
 
+    fun movie(movieId: String): Flow<Resource<Movie>> = networkBoundResource(
+        coroutineAppExecutors = coroutineAppExecutors,
+        saveCallResult = {
+            Movie.build(it, configuration)?.let { movie ->
+                movieDao.insert(listOf(movie))
+            }
+        },
+        loadFromDb = { movieDao.loadMovie(movieId = movieId) },
+        fetch = { movieService.movie(movieId = movieId) }
+    )
 
 }

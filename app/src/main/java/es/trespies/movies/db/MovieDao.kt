@@ -16,4 +16,7 @@ abstract class MovieDao {
     @Query("SELECT * FROM Movie")
     abstract fun loadMovies(): Flow<List<Movie>>
 
+    @Query("SELECT * FROM Movie WHERE id = :movieId LIMIT 1")
+    abstract fun loadMovie(movieId: String): Flow<Movie>
+
 }
