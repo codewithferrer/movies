@@ -41,8 +41,6 @@ fun MovieCellView(movie: Movie, onMovieClick: (Movie) -> Unit = {}) {
             .clickable { onMovieClick(movie) }
         ,
         shape = RoundedCornerShape(8.dp),
-        // backgroundColor = ColorWhite,
-        // elevation = 4.dp
 
     ) {
         Box(modifier = Modifier.background(ColorWhite)) {
@@ -67,10 +65,7 @@ fun MovieCellView(movie: Movie, onMovieClick: (Movie) -> Unit = {}) {
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
-
-
             }
-
         }
     }
 

@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import es.trespies.movies.model.Movie
 import es.trespies.movies.ui.components.TitleView
+import es.trespies.movies.ui.navigation.navigateToMovieDetail
 import es.trespies.movies.ui.theme.ColorBlack
 import es.trespies.movies.ui.theme.ColorWhite
 import es.trespies.movies.ui.theme.MoviesTheme
@@ -42,7 +43,8 @@ fun HomeView(viewModel: HomeViewModel = hiltViewModel(), navController: NavContr
     Scaffold(modifier = Modifier.background(ColorWhite)) {
         val movies by viewModel.movies.collectAsState(Resource.none(null))
 
-        HomeBodyContentView(movies = movies)
+        HomeBodyContentView(movies = movies,
+            onClick = { navController.navigateToMovieDetail(it.id) })
 
         LaunchedEffect(Unit) {
             viewModel.loadData()
@@ -51,7 +53,7 @@ fun HomeView(viewModel: HomeViewModel = hiltViewModel(), navController: NavContr
 }
 
 @Composable
-fun HomeBodyContentView(movies: Resource<List<Movie>>) {
+fun HomeBodyContentView(movies: Resource<List<Movie>>, onClick: (Movie) -> Unit = {}) {
     Column(modifier = Modifier
         .background(ColorWhite)
         .fillMaxWidth()
@@ -65,28 +67,13 @@ fun HomeBodyContentView(movies: Resource<List<Movie>>) {
             columns = GridCells.Adaptive(minSize = 128.dp)) {
             movies.data?.let {
                 items(it) { item ->
-                    MovieCellView(movie = item)
+                    MovieCellView(movie = item, onMovieClick = onClick)
                 }
             }
         }
     }
 
 
-}
-
-@Composable
-fun MovieView(movie: Movie) {
-
-    Text(text = "${movie.title} · ${movie.originalTitle}",
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        color = ColorBlack,
-        fontSize = 16.sp,
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1
-    )
 }
 
 @Preview( widthDp = 400, heightDp = 800)
