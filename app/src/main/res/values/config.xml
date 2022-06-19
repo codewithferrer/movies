@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="apikey" translatable="false">HERE YOUR API KEY</string>
+    <string name="url_images" translatable="false">https://image.tmdb.org/t/p/original</string>
+</resources>
