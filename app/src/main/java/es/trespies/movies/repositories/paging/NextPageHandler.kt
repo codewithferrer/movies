@@ -25,7 +25,7 @@ class NextPageHandler<RequestType>
     private var hasMore: Boolean = true
     private var isRunning: Boolean = false
 
-    private lateinit var producerScope: ProducerScope<LoadMoreState>
+    private var producerScope: ProducerScope<LoadMoreState>? = null
 
     private val result: Flow<LoadMoreState> = channelFlow {
         producerScope = this
@@ -44,17 +44,17 @@ class NextPageHandler<RequestType>
                 isRunning = false
                 hasMore = hasMorePages
 
-                producerScope.send(LoadMoreState(running = isRunning, hasMorePages = hasMore, errorMessage = null))
+                producerScope?.send(LoadMoreState(running = isRunning, hasMorePages = hasMore, errorMessage = null))
             }
             is ApiEmptyResponse -> {
                 isRunning = false
                 hasMore = false
-                producerScope.send(LoadMoreState(running = false, hasMorePages = false, errorMessage = null))
+                producerScope?.send(LoadMoreState(running = false, hasMorePages = false, errorMessage = null))
             }
             is ApiErrorResponse -> {
                 isRunning = false
                 hasMore = false
-                producerScope.send(LoadMoreState(running = false, hasMorePages = false, errorMessage = response.errorMessage))
+                producerScope?.send(LoadMoreState(running = false, hasMorePages = false, errorMessage = response.errorMessage))
             }
         }
     }
@@ -76,7 +76,7 @@ class NextPageHandler<RequestType>
         numPage++
 
         isRunning = true
-        producerScope.send(LoadMoreState(running = true, errorMessage = null))
+        producerScope?.send(LoadMoreState(running = true, errorMessage = null))
 
         doFetch()
     }
