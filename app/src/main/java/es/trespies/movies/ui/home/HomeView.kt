@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import es.trespies.movies.model.Movie
+import es.trespies.movies.repositories.paging.LoadMoreState
 import es.trespies.movies.ui.components.TitleView
 import es.trespies.movies.ui.navigation.navigateToMovieDetail
 import es.trespies.movies.ui.theme.ColorBlack
@@ -35,6 +36,7 @@ import es.trespies.movies.ui.theme.ColorWhite
 import es.trespies.movies.ui.theme.MoviesTheme
 import es.trespies.movies.ui.theme.fonts
 import es.trespies.movies.util.Resource
+import es.trespies.movies.util.collectAsState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,9 +44,13 @@ import es.trespies.movies.util.Resource
 fun HomeView(viewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
     Scaffold(modifier = Modifier.background(ColorWhite)) {
         val movies by viewModel.movies.collectAsState(Resource.none(null))
+        val loadMoreState by viewModel.loadMoreState.collectAsState()
 
         HomeBodyContentView(movies = movies,
-            onClick = { navController.navigateToMovieDetail(it.id) })
+            loadMoreState = loadMoreState,
+            onClick = { navController.navigateToMovieDetail(it.id) },
+            onLoadMore = { viewModel.loadNextPage() }
+        )
 
         LaunchedEffect(Unit) {
             viewModel.loadData()
@@ -53,13 +59,22 @@ fun HomeView(viewModel: HomeViewModel = hiltViewModel(), navController: NavContr
 }
 
 @Composable
-fun HomeBodyContentView(movies: Resource<List<Movie>>, onClick: (Movie) -> Unit = {}) {
+fun HomeBodyContentView(movies: Resource<List<Movie>>,
+                        loadMoreState: LoadMoreState?,
+                        onClick: (Movie) -> Unit = {},
+                        onLoadMore: () -> Unit = {}) {
     Column(modifier = Modifier
         .background(ColorWhite)
         .fillMaxWidth()
     ) {
         TitleView(title = "Movies · Status: ${movies.status.name}", modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp))
+
+        loadMoreState?.let {
+            if (it.isRunning) {
+                TitleView(title = "Loading")
+            }
+        }
 
         val scrollState = rememberLazyGridState()
 
@@ -69,7 +84,13 @@ fun HomeBodyContentView(movies: Resource<List<Movie>>, onClick: (Movie) -> Unit 
                 items(it) { item ->
                     MovieCellView(movie = item, onMovieClick = onClick)
                 }
+
+                item {
+                    onLoadMore()
+                }
             }
+
+
         }
     }
 
@@ -99,6 +120,6 @@ fun HomeBodyContentViewPreview() {
             movie, movie, movie, movie, movie, movie, movie, movie, movie, movie, movie,
         )
 
-        HomeBodyContentView(Resource.success(list))
+        HomeBodyContentView(Resource.success(list), LoadMoreState(running = true, hasMorePages = false, errorMessage = null))
     }
 }
