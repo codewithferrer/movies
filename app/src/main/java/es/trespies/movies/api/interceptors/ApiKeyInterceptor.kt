@@ -1,11 +1,10 @@
-package es.trespies.movies.services
+package es.trespies.movies.api.interceptors
 
-import android.content.Context
-import es.trespies.movies.R
+import es.trespies.movies.services.Configuration
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class ApiKeyInterceptor(private val context: Context): Interceptor {
+class ApiKeyInterceptor(private val configuration: Configuration): Interceptor {
 
     private val APIKEY_NAME = "api_key"
 
@@ -14,7 +13,7 @@ class ApiKeyInterceptor(private val context: Context): Interceptor {
 
         val originalHttpUrl = request.url
 
-        val apiKey: String = context.resources.getString(R.string.apikey)
+        val apiKey: String = configuration.apiKey
 
         val url = originalHttpUrl.newBuilder()
             .addQueryParameter(APIKEY_NAME, apiKey)

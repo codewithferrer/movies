@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import es.trespies.movies.api.MovieService
 import es.trespies.movies.db.MovieDao
 import es.trespies.movies.db.MovieDb
-import es.trespies.movies.services.ApiKeyInterceptor
+import es.trespies.movies.api.interceptors.ApiKeyInterceptor
 import es.trespies.movies.services.Configuration
 import es.trespies.movies.services.CoroutineAppExecutors
 import es.trespies.movies.util.ApiResponseCallAdapterFactory
@@ -37,7 +37,7 @@ object AppModule {
     }
 
     @Singleton @Provides
-    fun provideMovieService(@ApplicationContext appContext: Context): MovieService {
+    fun provideMovieService(@ApplicationContext appContext: Context, configuration: Configuration): MovieService {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
 
@@ -45,7 +45,7 @@ object AppModule {
         //Add interceptor for add logging
         httpClient.addInterceptor(logging)
         //Add interceptor for add api_key in each call
-        httpClient.addInterceptor(ApiKeyInterceptor(appContext))
+        httpClient.addInterceptor(ApiKeyInterceptor(configuration))
 
         return Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/")
